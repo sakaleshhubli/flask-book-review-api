@@ -2,4 +2,5 @@
 A simple Flask API for managing book reviews using a MySQL backend.
 
 ### Database ERD
-!(./db.png)
+
+![App Screenshot](./db.png)
