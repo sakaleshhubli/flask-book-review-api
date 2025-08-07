@@ -4,11 +4,13 @@ from collections import OrderedDict
 
 app = Flask(__name__)
 
+
+#enter your database details
 def get_connection():
     return mysql.connector.connect(
         host='localhost',
         user='root',
-        password='speed',
+        password='****', 
         database='flaskapi'
     )
 
@@ -148,4 +150,5 @@ def add_book():
 
 if __name__ == "__main__":
     print("Connecting to DB")
+
     app.run()
