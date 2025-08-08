@@ -31,12 +31,12 @@ A simple Flask API for managing book reviews using a MySQL backend.
    - Update database credentials as shown in picture
   
 4. **Run the program**
-   - ```bash
+   ```bash
      flask run --debug
      ```
 
 
-## API Endpoints
+## API Endpoints (CRUD Operations)
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
