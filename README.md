@@ -38,18 +38,23 @@ A simple Flask API for managing book reviews using a MySQL backend.
 
 ## API Endpoints
 
-
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/` | Welcome message and instructions |
-| GET | `/tables` | List all database tables |
-| GET | `/tables/<table_name>` | View contents of specific table |
-| GET | `/books` | View all books |
-| GET | `/users` | View all users |
-| GET | `/reviews` | View all reviews |
-| POST | `/adduser` | Create a new user |
-| POST | `/addreview` | Add a book review |
-| POST | `/addbook` | Add a new book (admin only) |
+| GET    | `/` | Welcome message and instructions |
+| GET    | `/tables` | List all database tables |
+| GET    | `/tables/<table_name>` | View contents of specific table |
+| GET    | `/books/` | View all books |
+| GET    | `/users/` | View all users |
+| GET    | `/reviews/` | View all reviews |
+| POST   | `/users/` | Create a new user |
+| POST   | `/books/` | Add a new book (admin only) |
+| POST   | `/reviews/` | Add a new review |
+| PUT    | `/users/<user_id>` | Update details of a specific user |
+| PUT    | `/books/<book_id>` | Update details of a specific book |
+| PUT    | `/reviews/<review_id>` | Update a specific review |
+| DELETE | `/users/<user_id>` | Delete a specific user |
+| DELETE | `/books/<book_id>` | Delete a specific book |
+| DELETE | `/reviews/<review_id>` | Delete a specific review |
 
 
 
