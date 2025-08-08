@@ -148,6 +148,142 @@ def add_book():
         "book_id": book_id
     }), 201
 
+# Update methods
+@app.route('/updateuser/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("UPDATE users SET username = %s, email = %s WHERE user_id = %s", 
+                   (username, email, user_id))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "User not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "User updated successfully"}), 200
+
+@app.route('/updatebook/<int:book_id>', methods=['PUT'])
+def update_book(book_id):
+    data = request.get_json()
+    
+    if 'user_id' not in data or not check_admin(data['user_id']):
+        return jsonify({"error": "Admin access required"}), 403
+    
+    title = data.get('title')
+    author = data.get('author')
+    isbn = data.get('isbn')
+    published_year = data.get('published_year')
+    average_rating = data.get('average_rating')
+    
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("""
+        UPDATE books SET title = %s, author = %s, isbn = %s, 
+        published_year = %s, average_rating = %s WHERE book_id = %s
+    """, (title, author, isbn, published_year, average_rating, book_id))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "Book not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "Book updated successfully"}), 200
+
+@app.route('/updatereview/<int:review_id>', methods=['PUT'])
+def update_review(review_id):
+    data = request.get_json()
+    rating = data.get('rating')
+    comment = data.get('comment')
+    anonymous = data.get('anonymous')
+    
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("""
+        UPDATE reviews SET rating = %s, comment = %s, anonymous = %s 
+        WHERE review_id = %s
+    """, (rating, comment, anonymous, review_id))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "Review not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "Review updated successfully"}), 200
+
+# Delete methods
+@app.route('/deleteuser/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "User not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "User deleted successfully"}), 200
+
+@app.route('/deletebook/<int:book_id>', methods=['DELETE'])
+def delete_book(book_id):
+    data = request.get_json() or {}
+    
+    if 'user_id' not in data or not check_admin(data['user_id']):
+        return jsonify({"error": "Admin access required"}), 403
+    
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("DELETE FROM books WHERE book_id = %s", (book_id,))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "Book not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "Book deleted successfully"}), 200
+
+@app.route('/deletereview/<int:review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    con = get_connection()
+    cursor = con.cursor()
+    
+    cursor.execute("DELETE FROM reviews WHERE review_id = %s", (review_id,))
+    con.commit()
+    
+    if cursor.rowcount == 0:
+        cursor.close()
+        con.close()
+        return jsonify({"error": "Review not found"}), 404
+    
+    cursor.close()
+    con.close()
+    return jsonify({"message": "Review deleted successfully"}), 200
+
 if __name__ == "__main__":
     print("Connecting to DB")
 
