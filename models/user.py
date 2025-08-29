@@ -1,16 +1,24 @@
 from utils.database import get_connection
+import hashlib
 
 class UserModel:
     @staticmethod
-    def create_user(username, email):
+    def create_user(username, email, password, role="user"):
+        # hash the password before saving
+        hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+
         con = get_connection()
         cursor = con.cursor()
-        cursor.execute("INSERT INTO users (email, username) VALUES (%s, %s)", (email, username))
+        cursor.execute(
+            "INSERT INTO users (email, username, password, role) VALUES (%s, %s, %s, %s)",
+            (email, username, hashed_password, role)
+        )
         con.commit()
         user_id = cursor.lastrowid
         cursor.close()
         con.close()
         return user_id
+
     
     @staticmethod
     def update_user(user_id, username, email):

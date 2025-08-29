@@ -3,19 +3,30 @@ from models.user import UserModel
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
+
+
 @users_bp.route('/', methods=['GET'])
 def show_users():
     from routes.main import show_table_content
     return show_table_content('users')
 
+
+
 @users_bp.route('/', methods=['POST'])
 def add_user():
     data = request.get_json()
-    username = data['username']
-    email = data['email']
-    
-    user_id = UserModel.create_user(username, email)
-    return jsonify({"message": "User created", "user_id": user_id}), 201
+    email = data.get("email")
+    username = data.get("username")
+    password = data.get("password")   # take password from request
+    role = data.get("role", "user")   # default = user if not provided
+
+    if not (email and username and password):
+        return jsonify({"error": "email, username, and password are required"}), 400
+
+    user_id = UserModel.create_user(username, email, password, role)
+    return jsonify({"user_id": user_id, "role": role}), 201
+
+
 
 @users_bp.route('/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
