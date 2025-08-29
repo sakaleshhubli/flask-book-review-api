@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from collections import OrderedDict
 from utils.database import get_connection
+from flask_jwt_extended import JWTManager
 
 main_bp = Blueprint('main', __name__)
 
@@ -32,3 +33,11 @@ def show_table_content(table_name):
     cursor.close()
     con.close()
     return jsonify({table_name: rows}), 200
+
+
+app.config["JWT_SECRET_KEY"] = "super_secret_key_here"  
+jwt = JWTManager(app)
+
+
+@main_bp.route('/login', methods=['GET'])
+def home():

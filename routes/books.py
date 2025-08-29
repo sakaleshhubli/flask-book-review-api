@@ -4,6 +4,8 @@ from utils.auth import check_admin
 
 books_bp = Blueprint('books', __name__, url_prefix='/books')
 
+
+
 @books_bp.route('/', methods=['GET'])
 def show_books():
     from routes.main import show_table_content

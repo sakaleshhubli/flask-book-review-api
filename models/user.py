@@ -7,6 +7,18 @@ class UserModel:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
     @staticmethod
+    def get_by_id(user_id):
+        con = get_connection()
+        cursor = con.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+            con.close()
+
+
+    @staticmethod
     def create_user(username, email, password, role="user"):
         hashed_password = UserModel.hash_password(password)
 
