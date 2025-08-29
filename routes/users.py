@@ -1,7 +1,13 @@
 from flask import Blueprint, jsonify, request
 from models.user import UserModel
-from flask_jwt_extended import create_access_token
 import hashlib
+from flask import Blueprint, request, jsonify
+from models.user import UserModel
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity
+)
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
@@ -24,16 +30,17 @@ def login():
         return jsonify({"message": "Invalid password"}), 401
 
     # Generate JWT token
-    access_token = create_access_token(identity=user_id)
+    access_token = create_access_token(identity=str(user["user_id"]))
     return jsonify({"message": "Login successful", "access_token": access_token})
 
-    
+
 
 @users_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())   # convert back to int
     user = UserModel.get_by_id(user_id)
+
     if not user:
         return jsonify({"message": "User not found"}), 404
 
